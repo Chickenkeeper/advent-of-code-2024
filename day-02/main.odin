@@ -4,6 +4,7 @@ import "core:fmt"
 import "core:os"
 import "core:strings"
 import "core:strconv"
+import "core:time"
 
 load_input :: proc(path: string) -> string {
 	input_bytes, ok := os.read_entire_file(path)
@@ -13,6 +14,15 @@ load_input :: proc(path: string) -> string {
 	}
 
 	return string(input_bytes)
+}
+
+print_solution :: proc(name, input: string, solution_proc: proc(string) -> int) {
+	start_tk := time.tick_now()
+	solution := solution_proc(input)
+	duration := time.tick_since(start_tk)
+	millis   := time.duration_milliseconds(duration)
+
+	fmt.printfln("%v: %v, time: %.4fms", name, solution, millis)
 }
 
 sign :: proc(val: int) -> int {
@@ -106,6 +116,6 @@ part_2 :: proc(input: string) -> int {
 main :: proc() {
 	input := load_input("input.txt")
 
-	fmt.printfln("part 1: %v", part_1(input))
-	fmt.printfln("part 2: %v", part_2(input))
+	print_solution("part 1", input, part_1)
+	print_solution("part 2", input, part_2)
 }
